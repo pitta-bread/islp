@@ -12,6 +12,18 @@ dependencies = []
 [project.scripts]
 islp = "islp:main"
 
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
 [build-system]
 requires = ["uv_build>=0.12.10,<0.13.0"]
 build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.6",
+    "ty>=0.0.79",
+]
