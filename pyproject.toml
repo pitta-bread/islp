@@ -1,5 +1,5 @@
 [project]
-name = "islp"
+name = "islp-textbook"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -7,10 +7,15 @@ authors = [
     { name = "pbeards", email = "peterbeardsmore@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "dash>=4.4.1",
+    "islp>=0.4.1",
+    "numpy>=2.5.3",
+    "plotly>=7.0.0",
+]
 
 [project.scripts]
-islp = "islp:main"
+islp = "islp_textbook:main"
 
 [tool.ruff]
 line-length = 88

@@ -13,7 +13,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    module_name = f"islp.lab_{args.chapter}"
+    module_name = f"islp_textbook.lab_{args.chapter}"
     try:
         lab = importlib.import_module(module_name)
     except ModuleNotFoundError as error:
