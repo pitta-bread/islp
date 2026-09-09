@@ -1,18 +1,26 @@
 from typing import Any
 
 import numpy as np
+import pandas as pd
 import plotly.express as px
 from dash import Dash, dcc, html
 from matplotlib.pyplot import subplots
 from numpy.random._generator import Generator
+from pandas.core.frame import DataFrame
 from plotly.graph_objs._figure import Figure
 from plotly.subplots import make_subplots
 from plotly.tools import mpl_to_plotly
+
+STATE: dict[str, Any] = {}
+
+pd.options.plotting.backend = "plotly"
 
 
 def main() -> None:
     chap2_3_3()
     figures: list[Figure] = chap2_3_4()
+    chap_2_3_7()
+    figures.append(chap2_3_9())
 
     app = Dash(__name__)
     app.layout = html.Div([dcc.Graph(figure=figure) for figure in figures])
@@ -115,4 +123,78 @@ def chap2_3_4() -> list[Figure]:
     ax.contour(x, y, f, levels=45)
     plotly_contour_fig: Figure = mpl_to_plotly(fig)
 
+    print("Results of Chapter 2.3.4 via Dash app.")
+
     return [side_by_side, fig3, plotly_contour_fig]
+
+
+def chap_2_3_7() -> None:
+    print("--- Chapter 2.3.7 ---")
+
+    auto: DataFrame = pd.read_csv(filepath_or_buffer="local_assets/Auto.csv")
+    print("Horsepower column:\n", auto["horsepower"])
+    print("Horsepower column unique values:\n", np.unique(ar=auto["horsepower"]))
+
+    # First try to sum and catch and print the error
+    try:
+        auto["horsepower"] = pd.to_numeric(arg=auto["horsepower"], errors="raise")
+        horsepower_sum: float = auto["horsepower"].sum()
+        print("Sum of horsepower column: ", horsepower_sum)
+    except Exception as e:
+        print("Error when trying to sum horsepower column: ", e)
+
+    auto: DataFrame = pd.read_csv(
+        filepath_or_buffer="local_assets/Auto.csv",
+        na_values=["?"],  # Treat "?" as NaN
+    )
+
+    # Now try to sum again
+    try:
+        horsepower_sum: float = auto["horsepower"].sum()
+        print(
+            "Sum of horsepower column after handling missing values: ", horsepower_sum
+        )
+    except Exception as e:
+        print(
+            "Error when trying to sum horsepower column "
+            "after handling missing values:\n",
+            e,
+        )
+
+    print("Shape: ", auto.shape)
+    auto_new: DataFrame = auto.dropna()
+    print("Shape after dropping rows with missing values: ", auto_new.shape)
+
+    Auto_re: DataFrame = auto.set_index(keys="name")
+    STATE["Auto"] = Auto_re
+    print("Auto_re head:\n", Auto_re.head())
+
+    print("Just first row:\n", Auto_re.iloc[0])
+
+    # all Ford and Datsun cars with displacement less than 300
+    result: DataFrame = Auto_re.loc[
+        lambda df: (df["displacement"] < 300) & (df.index.str.contains("ford|datsun")),
+        ["displacement", "weight", "origin"],
+    ]
+    print("All Ford and Datsun cars with displacement less than 300:\n", result)
+
+
+def chap2_3_9() -> Figure:
+    print("--- Chapter 2.3.9 ---")
+
+    Auto: DataFrame | None = STATE.get("Auto")
+    if Auto is None:
+        raise ValueError(
+            "Auto DataFrame not found in STATE. Please run chap_2_3_7 first."
+        )
+
+    fig = Auto.plot.scatter(
+        y="horsepower",
+        x="mpg",
+        title="Horsepower vs MPG",
+        # figsize width half of page
+        width=400,
+    )
+
+    print("Results of Chapter 2.3.9 via Dash app.")
+    return fig

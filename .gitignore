@@ -12,5 +12,5 @@ wheels/
 local_assets/
 
 # Marimo cache and session files
-__marimo__/cache/
-__marimo__/sessions/
+src/islp_textbook/__marimo__/cache/
+src/islp_textbook/__marimo__/sessions/
