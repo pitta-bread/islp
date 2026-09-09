@@ -13,4 +13,4 @@ local_assets/
 
 # Marimo cache and session files
 src/islp_textbook/__marimo__/cache/
-src/islp_textbook/__marimo__/sessions/
+src/islp_textbook/__marimo__/session/
