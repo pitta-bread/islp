@@ -10,7 +10,7 @@ requires-python = ">=3.12"
 dependencies = [
     "dash>=4.4.1",
     "islp>=0.4.1",
-    "marimo>=0.24.0",
+    "marimo[mcp]>=0.24.0",
     "numpy>=2.5.3",
     "pandas>=2.3.3",
     "plotly>=7.0.0",
@@ -34,6 +34,10 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = [
+    "altair>=6.3.0",
+    "openai>=3.17.0",
     "ruff>=0.16.6",
     "ty>=0.0.79",
+    "vegafusion>=2.0.3",
+    "vl-convert-python>=1.9.0.post1",
 ]
